@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Visual Question Answering</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 700px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="submit"], button {
+            background-color: #0066cc;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover, button:hover {
+            background-color: #004a99;
+        }
+
+        .image-preview {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .qa-section {
+            margin-top: 30px;
+        }
+
+        .qa-card {
+            background: #f9fafb;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #0066cc;
+            border-radius: 5px;
+        }
+
+        .qa-card strong {
+            color: #333;
+        }
+
+        .upload-new {
+            margin-top: 30px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Visual Question Answering</h1>
+
+        {% if not image_uploaded %}
+        <form action="/upload-image/" method="post" enctype="multipart/form-data">
+            <label for="image">Upload an image to begin:</label>
+            <input type="file" name="image" accept="image/*" required>
+            <input type="submit" value="Upload Image">
+        </form>
+        {% else %}
+
+        <div class="image-preview">
+            <img src="{{ image_url }}" alt="Uploaded Image">
+        </div>
+
+        <form action="/ask-question/" method="post">
+            <label for="question">Ask a question about the image:</label>
+            <input type="text" name="question" placeholder="e.g., What is the person doing?" required>
+            <input type="submit" value="Ask">
+        </form>
+
+        <div class="qa-section">
+            <h2>Questions & Answers</h2>
+            {% for q, a in qa_history %}
+            <div class="qa-card">
+                <p><strong>Q:</strong> {{ q }}</p>
+                <p><strong>A:</strong> {{ a }}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="upload-new">
+            <form action="/" method="get">
+                <button type="submit">Upload New Image</button>
+            </form>
+        </div>
+
+        {% endif %}
+    </div>
+</body>
+</html>
